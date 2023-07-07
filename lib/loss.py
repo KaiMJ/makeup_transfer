@@ -157,6 +157,8 @@ class SAATDLoss(nn.Module):
         return loss_D
 
 
+
+
 class SAATGLoss(nn.Module):
     def __init__(self, opts, generator, dis_non_makeup, dis_makeup):
         super(SAATGLoss, self).__init__()
@@ -220,11 +222,18 @@ class SAATGLoss(nn.Module):
         loss_G_semantic = (loss_G_semantic_makeup + loss_G_semantic_non_makeup) * 0.5 * self.semantic_weight
 
         # makeup loss
-        loss_G_CP = self.CPL(z_transfer, makeup) + self.CPL(z_removal, non_makeup)
-        loss_G_GP = self.GPL(z_transfer, non_makeup) + self.GPL(z_removal, makeup)
-        loss_G_SPL = loss_G_CP * self.CP_weight + loss_G_GP * self.GP_weight
+        # loss_G_CP = self.CPL(z_transfer, makeup) + self.CPL(z_removal, non_makeup)
+        # loss_G_GP = self.GPL(z_transfer, non_makeup) + self.GPL(z_removal, makeup)
 
-        loss_G = loss_G_GAN + loss_G_rec + loss_G_cycle + loss_G_semantic + loss_G_SPL
+        # print("Loss_G_CP: ", loss_G_CP)
+        # print("Loss_G_GP: ", loss_G_GP)
+        # loss_G_SPL = loss_G_CP * self.CP_weight + loss_G_GP * self.GP_weight
+
+        # print("Loss G_GAN: ", loss_G_GAN)
+        # print("Loss G_rec: ", loss_G_rec)
+        # print("Loss G_cycle: ", loss_G_cycle)
+        # print("Loss G_semantic: ", loss_G_semantic)
+        # print("Loss G_SPL: ", loss_G_SPL)
+        loss_G = loss_G_GAN + loss_G_rec + loss_G_cycle + loss_G_semantic #+ loss_G_SPL
 
         return loss_G, z_transfer, z_removal, z_rec_non_makeup, z_rec_makeup, z_cycle_non_makeup, z_cycle_makeup, mapX, mapY
-
