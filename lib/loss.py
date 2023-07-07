@@ -121,11 +121,15 @@ class GANLoss(nn.Module):
             raise NotImplementedError(f'GANLoss {mode} not recognized, we support lsgan and vanilla.')
 
     def forward(self, predict, target):
-        target = target.to(predict.dtype)
-        target = torch.ones_like(predict) * target
-        loss = self.loss(predict, target)
+        loss = 0
+        if type(predict) == list: # multi-scale discriminator
+            for predict_i in predict:
+                target_square = torch.ones_like(predict_i) * target
+                loss += self.loss(predict_i, target_square)
+        else:
+            target_square = torch.ones_like(predict) * target
+            loss = self.loss(predict, target_square)
         return loss
-
 
 ####################################################################
 # ------------------------- D_Loss -------------------------------
